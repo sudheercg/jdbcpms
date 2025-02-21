@@ -1,8 +1,10 @@
 package com.codegnan.pms.client;
 
-import com.codegnan.pms.service.InvestmentService;
-import com.codegnan.pms.model.Investment;
 import java.util.List;
+
+import com.codegnan.pms.model.Investment;
+import com.codegnan.pms.model.UserInvestmentDTO;
+import com.codegnan.pms.service.InvestmentService;
 
 /**
  * Client class to test CRUD operations for InvestmentService.
@@ -40,7 +42,33 @@ public class InvestmentClient {
 
         // Delete an investment
         System.out.println("Deleting investment with ID 2...");
-        investmentService.deleteInvestment(2);
+      //  investmentService.deleteInvestment(2);
         System.out.println("Investment deleted successfully.\n");
+        
+        
+        
+        
+        
+        List<UserInvestmentDTO> investmentsList1 = investmentService.getUserInvestments(1, 1);
+
+        if (investments.isEmpty()) {
+            System.out.println("No investments found for the provided details.");
+        } else {System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+            System.out.println("Investments for User ID " + 1 + " in Portfolio ID " + 1 + ":");
+            for (UserInvestmentDTO investment : investmentsList1) {
+                System.out.println("Investor: " + investment.getInvestorName() +
+                        ", Portfolio: " + investment.getPortfolioName() +
+                        ", Stock: " + investment.getStockName() +
+                        ", Quantity: " + investment.getQuantity() +
+                        ", Purchase Price: $" + investment.getPurchasePrice());
+            }
+        }
+
+        
+        
+        
+        
+        
+        
     }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.codegnan.pms.dao.InvestmentDAO;
 import com.codegnan.pms.dao.StockDAO;
 import com.codegnan.pms.model.Investment;
+import com.codegnan.pms.model.UserInvestmentDTO;
 
 /**
  * Service class for managing investments with business logic and validation.
@@ -83,4 +84,21 @@ public class InvestmentService {
         investmentDAO.deleteInvestment(investmentId);
         System.out.println("Investment deleted successfully!");
     }
+    
+    
+    /**
+     * Retrieves all investments made by a particular user in a specific portfolio.
+     */
+    public List<UserInvestmentDTO> getUserInvestments(int userId, int portfolioId) {
+        List<UserInvestmentDTO> investments = investmentDAO.getUserInvestments(userId, portfolioId);
+        if (investments.isEmpty()) {
+            System.out.println("No investments found for this user in the given portfolio.");
+        }
+        return investments;
+    }    
+    
+    
+    
+    
+    
 }

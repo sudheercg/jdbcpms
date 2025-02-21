@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.codegnan.pms.model.Investment;
+import com.codegnan.pms.model.UserInvestmentDTO;
 import com.codegnan.pms.util.DatabaseUtils;
 
 /**
@@ -83,6 +84,45 @@ public class InvestmentDAO {
             throw new RuntimeException("Error: Unable to update investment. Reason: " + e.getMessage());
         }
     }
+    
+    
+    
+    public List<UserInvestmentDTO> getUserInvestments(int userId, int portfolioId) {
+        List<UserInvestmentDTO> investments = new ArrayList<>();
+        String sql = "SELECT u.name AS investor_name, p.portfolio_name AS portfolio_name, s.name AS stock_name, " +
+                     "i.quantity, i.purchase_price " +
+                     "FROM investors u " +
+                     "JOIN portfolio p ON u.investor_id = p.investor_id " +
+                     "JOIN portfolio_investments i ON p.portfolio_id = i.portfolio_id " +
+                     "JOIN stocks s ON i.stock_id = s.stock_id " +
+                     "WHERE u.investor_id = ? AND p.portfolio_id = ?";
+        try (Connection conn = DatabaseUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, portfolioId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                investments.add(new UserInvestmentDTO(
+                    rs.getString("investor_name"),
+                    rs.getString("portfolio_name"),
+                    rs.getString("stock_name"),
+                    rs.getInt("quantity"),
+                    rs.getDouble("purchase_price")
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error: Unable to retrieve user investments. Reason: " + e.getMessage());
+        }
+        return investments;
+    }
+
+    
+    
+    
+    
+    
+    
+    
 
     public void deleteInvestment(int investmentId) {
         String sql = "DELETE FROM portfolio_investments WHERE investment_id = ?";
